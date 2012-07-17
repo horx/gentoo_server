@@ -1,5 +1,8 @@
 #! /bin/bash
 
+groupadd www
+useradd -g www -s /sbin/nologin -M www
+
 mkdir /opt/nginx
 mkdir /var/tmp/nginx/
 mkdir /var/run/nginx/

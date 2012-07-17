@@ -1,0 +1,38 @@
+#i! /bin/bash
+
+emerge cmake
+groupadd mysql
+useradd -g mysql -s /sbin/nologin -M mysql
+
+cd /tmp
+wget http://cdn.mysql.com/Downloads/MySQL-5.5/mysql-5.5.25a.tar.gz
+tar zxvf mysql-5.5.25a.tar.gz
+cd mysql-5.5.25a
+cmake . \ 
+-DCMAKE_INSTALL_PREFIX=/opt/mysql \
+-DINSTALL_DATADIR=/opt/mysql/data \
+-DSYSCONFDIR=/opt/mysql/etc \
+-DWITH_MYISAM_STORAGE_ENGINE=1 \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DENABLED_LOCAL_INFILE=1 \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DEXTRA_CHARSETS=all \
+-DMYSQL_TCP_PORT=3306 \
+-DMYSQL_UNIX_ADDR=/tmp/mysqld.sock \
+-DMYSQL_USER=mysql \
+-DWITH_DEBUG=0
+
+make && make install
+cd /opt/mysql
+cp support-files/my-medium.cnf /opt/mysql/etc/my.cnf
+
+script/mysql_install_db --user=mysql --basedir=/opt/mysql
+cp support-files/mysql.server /etc/init.d/mysql
+export PATH=/opt/mysql/bin:$PATH
+rc-update add mysql default
+
+
+
