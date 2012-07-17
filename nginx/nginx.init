@@ -10,10 +10,10 @@
 # Description:       starts nginx using start-stop-daemon
 ### END INIT INFO
 
-DAEMON=/usr/local/nginx/sbin/nginx
+DAEMON=/opt/nginx/sbin/nginx
 NAME=nginx
 DESC=nginx
-PIDFILE=/opt/nginx/logs/$NAME.pid
+PIDFILE=/var/run/nginx/$NAME.pid
 
 test -x $DAEMON || exit 0
 

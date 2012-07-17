@@ -1,0 +1,34 @@
+#! /bin/bash
+
+mkdir /opt/nginx
+mkdir /var/tmp/nginx/
+mkdir /var/run/nginx/
+DIR='pwd'
+cd /tmp
+wget wget http://nginx.org/download/nginx-1.2.2.tar.gz
+
+tar zxvf nginx-1.2.2.tar.gz
+cd nginx-1.2.2
+./configure \
+--prefix=/opt/nginx \
+--user=www \
+--group=www \
+--with-pcre \
+--with-http_ssl_module \
+--with-http_flv_module \
+--with-http_gzip_static_module \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--http-client-body-temp-path=/var/tmp/nginx/client \
+--http-proxy-temp-path=/var/tmp/nginx/proxy \
+--http-fastcgi-temp-path=/var/tmp/nginx/fcgi \
+--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+--http-scgi-temp-path=/var/tmp/nginx/scgi
+
+make && make install
+cd $DIR
+cp nginx.init.d /etc/init.d/nginx
+export PATH=/opt/nginx/sbin:$PATH
+rc-update add nginx default
